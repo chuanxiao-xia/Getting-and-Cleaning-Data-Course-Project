@@ -16,7 +16,7 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
 
 I have created one R script called run_analysis.R that does the following.
 
-    Merges the training and the test sets to create one data set.
+    1. Merges the training and the test sets to create one data set.
         # Get train data set
             X_train <- read.table("./train/X_train.txt",header=FALSE)
             Y_train <- read.table("./train/y_train.txt",header=FALSE)
@@ -29,7 +29,7 @@ I have created one R script called run_analysis.R that does the following.
             test_data <- cbind(X_test,Y_test,Subject_test)
         # Merge train and test data set
             merge_data <- rbind(train_data,test_data)
-    Extracts only the measurements on the mean and standard deviation for each measurement. 
+    2. Extracts only the measurements on the mean and standard deviation for each measurement. 
         #Get descriptive variables name from "features" file
             features <- read.table("features.txt",header=FALSE)
             listofNames <- as.character(features[,2])
@@ -41,15 +41,15 @@ I have created one R script called run_analysis.R that does the following.
         #for each measurement.
             mean_std_data <- select(merge_data,contains("mean"),contains("std"),
                                     Activity,Subject)
-    Uses descriptive activity names to name the activities in the data set and appropriately labels the data set with descriptive variable names. 
+    3. Uses descriptive activity names to name the activities in the data set and appropriately labels the data set with descriptive variable names. 
             Activity_labels <- read.table("activity_labels.txt",header=FALSE)
             colnames(Activity_labels) <- c("Activity", "Activity_labels")
             mean_std_data <- merge(mean_std_data, Activity_labels, by.x="Activity",
                                    by.y="Activity")
-    From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+    4. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
             gb_data <- group_by(mean_std_data, Activity_labels, Subject)
             tidy_data <- summarise_each(gb_data, funs(mean), -Activity)
-    Final Tidy data file using write.table
+    5. Final Tidy data file using write.table
             write.table(tidy_data, file="tidy_data.txt",row.name=FALSE)
 
 ## Final tidy data
